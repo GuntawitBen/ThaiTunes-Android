@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "353399943899",
+    "project_id": "poppic-a7211",
+    "storage_bucket": "poppic-a7211.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353399943899:android:3943068086a846d40692fe",
+        "android_client_info": {
+          "package_name": "com.egci428.egci428_poppic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaojaL8Tu02M9ieCpaVPdfoz40Gwbk6Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
