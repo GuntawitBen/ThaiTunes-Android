@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.egci428.egci428_poppic"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.egci428.egci428_poppic"
