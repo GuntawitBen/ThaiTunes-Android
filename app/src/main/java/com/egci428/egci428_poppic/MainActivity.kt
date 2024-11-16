@@ -29,12 +29,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.pop -> {
-                    // Show PopFragment when Pop item is selected
-                    // Show the PopFragment (implement it as needed)
-//                    val popFragment = PopFragment()
-//                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.fragment_container, popFragment)
-//                        .commit()
+                    val popFragment = PopFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, popFragment)
+                        .commit()
                     true
                 }
                 R.id.user -> {
