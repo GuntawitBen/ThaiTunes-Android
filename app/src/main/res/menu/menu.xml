@@ -2,15 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_launcher_background"
+        android:id="@+id/home"
+        android:icon="@drawable/home"
         android:title="Home"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom|withText"
+        />
 
-    <!-- Search Menu Item -->
     <item
-        android:id="@+id/nav_search"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="Search"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/pop"
+        android:icon="@drawable/pokemon"
+        android:title="Pop"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/user"
+        android:icon="@drawable/user"
+        android:title="User"
+        app:showAsAction="ifRoom"
+        />
 </menu>

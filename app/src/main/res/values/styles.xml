@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- res/values/styles.xml -->
+    <style name="CustomFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="fabSize">normal</item>
+        <item name="rippleColor">@color/md_theme_onPrimaryFixedVariant</item>
+        <item name="backgroundTint">@color/md_theme_onSurface_mediumContrast</item>
+        <item name="tint">@color/md_theme_onPrimary</item>
+    </style>
+</resources>
