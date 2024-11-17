@@ -8,26 +8,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Logo TextView -->
-    <TextView
-        android:id="@+id/logoTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/albert_sans_extrabold"
-        android:text="PopPic"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        android:textStyle="bold"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
+        android:layout_marginBottom="58dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@id/logoTV" />
 

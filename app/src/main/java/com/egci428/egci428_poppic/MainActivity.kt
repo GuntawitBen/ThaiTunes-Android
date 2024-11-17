@@ -36,12 +36,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.user -> {
-                    // Show UserFragment when User item is selected
-                    // Show the UserFragment (implement it as needed)
-//                    val userFragment = UserFragment()
-//                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.fragment_container, userFragment)
-//                        .commit()
+                    val userFragment = UserFragment()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, userFragment)
+                        .commit()
                     true
                 }
                 else -> false
