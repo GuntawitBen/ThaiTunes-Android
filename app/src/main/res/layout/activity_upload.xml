@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,23 +14,23 @@
         android:hint="Enter post content"
         android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextMediaUrl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter media URL (auto-filled after upload)"
-        android:inputType="text"
-        android:enabled="false" /> <!-- Set to disabled if URL will be filled automatically -->
+    <!-- Set to disabled if URL will be filled automatically -->
 
     <Button
-        android:id="@+id/btnUploadImage"
+        android:id="@+id/uploadImageBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload Image"
         android:layout_gravity="center" />
 
+    <ImageView
+        android:id="@+id/uploadedIV"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <Button
-        android:id="@+id/btnSavePost"
+        android:id="@+id/saveBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save Post"
