@@ -18,15 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import java.io.InputStream;
+
+import retrofit2.Call;
+
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -81,59 +76,60 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     public void saveData(){
+        if (uri == null || uploadContent.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Please select an image and enter content!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        // Convert image to Base64
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            byte[] imageBytes = new byte[inputStream.available()];
+            inputStream.read(imageBytes);
+            String base64Content = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
 
-        myRef.setValue("Hello! what");
+            // Get user input for the image content
+            String content = uploadContent.getText().toString();
+            String fileName = "uploaded_image_" + System.currentTimeMillis() + ".jpg";
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("message");
+            // Call uploadData() with the Base64 content
+            uploadData(fileName, content, base64Content);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
-        builder.setCancelable(false);
-        builder.setView(R.layout.process_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot){
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete());
-                Uri urlImage = uriTask.getResult();
-                imageURL = urlImage.toString();
-                uploadData();
-                dialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
-            }
-        });
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to process image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void uploadData(){
+    public void uploadData(String fileName, String commitMessage, String base64Content) {
+        GitHubService gitHubService = GitHubService.create();
 
-        String content = uploadContent.getText().toString();
-        // TODO
+        // Replace with your GitHub credentials
+        String owner = "GuntawitBen";  // Replace with your GitHub username
+        String repo = "EGCI428_PopPic";       // Replace with your repository name
+        String path = "folder/" + filePath;  // Specify the folder and file name
+        String authToken = "Bearer YOUR_PERSONAL_ACCESS_TOKEN";
 
-        Post postClass = new Post(content, "", "", imageURL);
+        // Create GitHubFile object
+        Post file = new Post(commitMessage, base64Content, "", "");
 
-        FirebaseDatabase.getInstance().getReference("messages").setValue(postClass).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(UploadActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UploadActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        // API call to upload the file
+        gitHubService.uploadFile(owner, repo, "images/" + fileName, token, file)
+                .enqueue(new retrofit2.Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(UploadActivity.this, "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(UploadActivity.this, "Upload failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(UploadActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
+
 
 }
