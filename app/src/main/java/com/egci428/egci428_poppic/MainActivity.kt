@@ -1,22 +1,14 @@
 package com.egci428.egci428_poppic
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        FirebaseAnalytics.getInstance(this)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
@@ -28,21 +20,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.home -> {
                     val homeFragment = HomeFragment()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, homeFragment)
+                        .replace(R.id.pageFragment, homeFragment)
                         .commit()
                     true
                 }
                 R.id.pop -> {
                     val popFragment = PopFragment()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, popFragment)
+                        .replace(R.id.pageFragment, popFragment)
                         .commit()
                     true
                 }
                 R.id.user -> {
                     val userFragment = UserFragment()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, userFragment)
+                        .replace(R.id.pageFragment, userFragment)
                         .commit()
                     true
                 }
@@ -54,7 +46,13 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val homeFragment = HomeFragment()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, homeFragment)
+                .replace(R.id.pageFragment, homeFragment)
+                .commit()
+        }
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nowPlayingFragment, NowPlayingFragment())
                 .commit()
         }
     }
