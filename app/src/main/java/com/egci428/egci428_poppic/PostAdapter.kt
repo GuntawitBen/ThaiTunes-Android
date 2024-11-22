@@ -8,6 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
+data class Post(
+    val content: String = "",
+    val mediaUrl: String = "",
+    val timestamp: String = "",
+    val userId: String = ""
+)
+
 
 class PostAdapter(private val postList: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 

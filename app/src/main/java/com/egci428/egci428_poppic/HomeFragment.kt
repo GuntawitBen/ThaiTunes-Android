@@ -37,11 +37,12 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = postAdapter
 
         // Load posts from Firebase
+        loadPostsFromFirebase()
 
-        // UPLOAD FAB
+        // Floating Action Button
         val fab = view.findViewById<FloatingActionButton>(R.id.floating_action_button)
         fab.setOnClickListener {
-            val intent = Intent(requireContext(), UploadActivity::class.java)
+            val intent = Intent(requireContext(), NewPostActivity::class.java)
             startActivity(intent)
         }
 
@@ -50,7 +51,42 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-//        loadPostsFromFirebase()
+        loadPostsFromFirebase()
     }
 
+    private fun loadPostsFromFirebase() {
+        // Reference the Firestore collection where your posts are stored
+        db.collection("Posts")
+            .get()
+            .addOnSuccessListener { result ->
+                // Clear the current list before adding new posts
+                postList.clear()
+
+                // Iterate through each document in the collection
+                for (document in result) {
+                    // Create a Post object from the Firestore document
+                    val content = document.getString("content") ?: ""
+                    val mediaUrl = document.getString("mediaUrl") ?: ""
+                    val timestamp = document.getString("timestamp") ?: ""
+                    val userId = document.getString("userId") ?: ""
+
+                    // Create a new Post instance and add it to the postList
+                    val post = Post(content, mediaUrl, timestamp, userId)
+                    postList.add(post)
+                }
+
+                // Notify the adapter that the data has changed
+                postAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+    }
+
+    companion object {
+        private const val TAG = "HomeFragment"
+    }
 }
+
+
+
