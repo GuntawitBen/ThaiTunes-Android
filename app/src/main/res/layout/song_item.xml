@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/md_theme_background_highContrast"
     android:outlineAmbientShadowColor="#000000"
     android:outlineSpotShadowColor="#000000"
+    android:foreground="?android:attr/selectableItemBackground"
     android:padding="16dp"
-    tools:context=".NowPlayingFragment">
+    tools:context=".SearchFragment">
 
     <!-- Song Image -->
     <ImageView
@@ -25,7 +26,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
         android:text="Song Title"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -49,38 +49,8 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Seek Bar (for song progress) -->
-    <SeekBar
-        android:id="@+id/songProgress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/songImage" />
-
-    <!-- Current Time -->
-    <TextView
-        android:id="@+id/currentTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songProgress" />
-
-    <!-- Total Time -->
-    <TextView
-        android:id="@+id/totalTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3:00"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songProgress" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-
