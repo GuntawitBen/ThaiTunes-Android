@@ -2,8 +2,8 @@ package com.egci428.egci428_poppic.models;
 
 public class Song {
     private String songName;
-    private String artist;
-    private String album;
+    private String artistName;
+    private String artWorkURL;
     private String genre;
 
     // Getters and Setters
@@ -15,20 +15,20 @@ public class Song {
         this.songName = songName;
     }
 
-    public String getArtist() {
-        return artist;
+    public String getArtistName() {
+        return artistName;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setArtistName(String artist) {
+        this.artistName = artistName;
     }
 
-    public String getAlbum() {
-        return album;
+    public String getArtWorkURL() {
+        return artWorkURL;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public void setArtWorkURL(String artWorkURL) {
+        this.artWorkURL = artWorkURL;
     }
 
     public String getGenre() {

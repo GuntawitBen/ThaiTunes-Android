@@ -8,11 +8,20 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.media.MediaPlayer
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.egci428.egci428_poppic.api.API
+import com.egci428.egci428_poppic.models.Song
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class NowPlayingFragment : Fragment() {
 
@@ -27,8 +36,17 @@ class NowPlayingFragment : Fragment() {
     private var isPlaying = false
 
     private val handler = Handler()
-
     private val songUrl = "http://10.0.2.2:3000/play/Espresso"
+    private val apiService: API
+
+    init {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        apiService = retrofit.create(API::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +63,11 @@ class NowPlayingFragment : Fragment() {
         songTitle = view.findViewById(R.id.songTitle)
         songArtist = view.findViewById(R.id.songArtist)
         songImage = view.findViewById(R.id.songImage)
+
+        playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+
+        // Fetch song metadata
+        fetchSongMetadata("Espresso")
 
         // Initialize MediaPlayer
         mediaPlayer = MediaPlayer().apply {
@@ -97,6 +120,41 @@ class NowPlayingFragment : Fragment() {
         return view
     }
 
+    private fun fetchSongMetadata(songName: String) {
+        val call = apiService.getSongInfo(songName)
+        call.enqueue(object : Callback<Song> {
+            override fun onResponse(call: Call<Song>, response: Response<Song>) {
+                if (response.isSuccessful) {
+                    val song = response.body()
+                    song?.let {
+                        // Update UI with song metadata
+                        songTitle.text = it.songName
+                        songArtist.text = it.artistName
+
+                        Picasso.get()
+                            .load(it.artWorkURL)
+                            .into(songImage, object : com.squareup.picasso.Callback {
+                                override fun onSuccess() {
+                                    Log.d("Picasso", "Image Loaded Successfully")
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    Log.e("Picasso", "Error loading image: ${e?.message}")
+                                }
+                            })
+
+                    }
+                } else {
+                    Toast.makeText(activity, "Failed to fetch song metadata", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Song>, t: Throwable) {
+                Toast.makeText(activity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun startUpdatingProgress() {
         handler.postDelayed(object : Runnable {
             override fun run() {
@@ -127,5 +185,3 @@ class NowPlayingFragment : Fragment() {
         mediaPlayer.release()
     }
 }
-
-
