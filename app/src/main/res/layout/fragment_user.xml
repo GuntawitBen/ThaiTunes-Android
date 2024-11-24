@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".UserFragment">
 
-    <!-- Username TextView -->
-
-    <!-- Profile Picture -->
-
-    <!-- Playlist Button -->
-
-    <!-- Lower Section for Dynamic Content -->
-    <FrameLayout
-        android:id="@+id/upperContent"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
+<<<<<<< HEAD
 
     android:layout_height="match_parent">
 
@@ -95,3 +88,11 @@ android:layout_weight="1">
     <!-- Placeholder or Alternative View -->
     </FrameLayout>
     </FrameLayout>
+=======
+        android:layout_height="match_parent"
+        android:paddingVertical="300dp"
+        android:text="User page"
+        android:textAlignment="center" />
+
+</FrameLayout>
+>>>>>>> parent of c77a9e9 (Merge branch 'finish-user')
