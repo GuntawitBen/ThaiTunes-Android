@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                     true
                 }
-                R.id.pop -> {
-                    val popFragment = PopFragment()
+                R.id.Search -> {
+                    val searchFragment = SearchFragment()
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.pageFragment, popFragment)
+                        .replace(R.id.pageFragment, searchFragment)
                         .commit()
                     true
                 }
