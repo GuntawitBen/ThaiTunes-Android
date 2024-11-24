@@ -3,6 +3,8 @@ package com.egci428.egci428_poppic.api;
 
 import com.egci428.egci428_poppic.models.Song;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -26,16 +28,9 @@ public interface API {
 
     @GET("get/{songName}")
     Call<Song> getSongInfo(@Path("songName") String songName);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     @GET("api/all")
     Call<List<Song>> allSongs();
 
 
-
-=======
->>>>>>> parent of c870c85 (Search Fragment)
-=======
->>>>>>> parent of c870c85 (Search Fragment)
 }
