@@ -7,9 +7,4 @@
         <item name="backgroundTint">@color/md_theme_onSurface_mediumContrast</item>
         <item name="tint">@color/md_theme_onPrimary</item>
     </style>
-
-    <style name="Widget.Theme.EGCI428_PopPic.MyView" parent="">
-        <item name="android:background">@color/gray_400</item>
-        <item name="exampleColor">@color/light_blue_400</item>
-    </style>
 </resources>
