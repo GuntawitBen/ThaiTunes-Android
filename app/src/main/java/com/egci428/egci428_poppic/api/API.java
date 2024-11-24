@@ -27,12 +27,15 @@ public interface API {
     @GET("get/{songName}")
     Call<Song> getSongInfo(@Path("songName") String songName);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     @GET("api/all")
     Call<List<Song>> allSongs();
 
 
 
+=======
+>>>>>>> parent of c870c85 (Search Fragment)
 =======
 >>>>>>> parent of c870c85 (Search Fragment)
 }
