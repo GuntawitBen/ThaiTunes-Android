@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+
 import android.media.MediaPlayer
 import android.os.Handler
 import android.util.Log
@@ -150,7 +150,13 @@ class NowPlayingFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Song>, t: Throwable) {
-                Toast.makeText(activity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                if (isAdded) {
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("NowPlayingFragment", "Fragment is not attached: ${t.message}")
+                }
             }
         })
     }

@@ -13,17 +13,27 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
+import com.egci428.egci428_poppic.api.API
+import com.egci428.egci428_poppic.models.Song
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class UserFragment : Fragment() {
-    protected var objects: ArrayList<String> = arrayListOf()
+    protected var songlists: List<Song> = listOf()
+    lateinit var listViewPlaylists:ListView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Initialize your data
-        objects = arrayListOf("Song1", "Song2", "Song3")
+
+
 
         // Inflate the fragment layout
         val view = inflater.inflate(R.layout.fragment_user, container, false)
@@ -31,10 +41,10 @@ class UserFragment : Fragment() {
         // Get references to the UI components
         val image = view.findViewById<ImageView>(R.id.imageView2)
         val btnPlaylist = view.findViewById<Button>(R.id.btnPlaylist)
-        val listViewPlaylists = view.findViewById<ListView>(R.id.listViewPlaylists)
-
+         listViewPlaylists = view.findViewById(R.id.listViewPlaylists)
+        fetchSongs()
         // Set up the adapter
-        val adapter = Adapter(requireContext(), 0, objects)
+        val adapter = Adapter(requireContext(), 0, songlists)
         listViewPlaylists.adapter = adapter
 
         // Set the initial image
@@ -57,7 +67,32 @@ class UserFragment : Fragment() {
         return view
     }
 
-    class Adapter(var Songdata: Context, resource: Int, var objects: ArrayList<String>)
+    private fun fetchSongs() {
+        // Retrofit API call to fetch song data
+        val apiService = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/") // Replace with your base URL
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(API::class.java)
+
+        apiService.allSongs().enqueue(object : Callback<List<Song>> {
+            override fun onResponse(call: Call<List<Song>>, response: Response<List<Song>>) {
+                if (response.isSuccessful) {
+                    songlists = response.body() ?: emptyList()  // Update the song list
+                    // Notify the adapter that data has changed
+                    (listViewPlaylists.adapter as Adapter).notifyDataSetChanged()
+                } else {
+                    Toast.makeText(activity, "Failed to fetch songs", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Song>>, t: Throwable) {
+                Toast.makeText(activity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    class Adapter(var Songdata: Context, resource: Int, var objects: List<Song>)
         : BaseAdapter() {
 
         override fun getCount(): Int {
@@ -80,9 +115,11 @@ class UserFragment : Fragment() {
             val songtext = view.findViewById<TextView>(R.id.Song)
             val artisttext = view.findViewById<TextView>(R.id.artistName)
             val image = view.findViewById<ImageView>(R.id.imageView3)
-            songtext.text = Song
-            artisttext.text = Song
-            image.setImageResource(R.drawable.baseline_auto_awesome_motion_24)
+
+            songtext.text = Song.songName
+            artisttext.text = Song.artistName
+            Picasso.get().load(Song.artWorkURL).into(image)
+
 
             Log.d("UserFragment", "Song: $Song") // Log the song data to ensure it's working
 
