@@ -3,8 +3,6 @@ package com.egci428.egci428_poppic.api;
 
 import com.egci428.egci428_poppic.models.Song;
 
-import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -31,5 +29,6 @@ public interface API {
 
     @GET("api/all")
     Call<List<Song>> allSongs();
-}
 
+
+}
