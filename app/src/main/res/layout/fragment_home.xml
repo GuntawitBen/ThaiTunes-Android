@@ -14,10 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="70dp"
-        android:fontFamily="@font/albert_sans_extrabold"
+        android:fontFamily="sans-serif"
         android:text="Hello!"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/md_theme_onSurface_mediumContrast"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

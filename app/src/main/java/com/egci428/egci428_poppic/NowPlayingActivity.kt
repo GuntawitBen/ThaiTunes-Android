@@ -34,9 +34,11 @@ class NowPlayingFragment : Fragment() {
     private lateinit var songArtist: TextView
     private lateinit var songImage: ImageView
     private var isPlaying = false
+    private var playingSong: String = "Please Please Please"
+    private lateinit var songName: String
 
     private val handler = Handler()
-    private val songUrl = "http://10.0.2.2:3000/play/Espresso"
+    private val songUrl = "http://10.0.2.2:3000/play/$playingSong"
     private val apiService: API
 
     init {
@@ -48,12 +50,27 @@ class NowPlayingFragment : Fragment() {
         apiService = retrofit.create(API::class.java)
     }
 
+    companion object {
+        private const val ARG_SONG_NAME = "songName"
+
+        fun newInstance(songName: String): NowPlayingFragment {
+            val fragment = NowPlayingFragment()
+            val args = Bundle().apply {
+                putString(ARG_SONG_NAME, songName)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
+
 
         // Initialize views
         playPauseButton = view.findViewById(R.id.playPauseButton)
@@ -64,32 +81,17 @@ class NowPlayingFragment : Fragment() {
         songArtist = view.findViewById(R.id.songArtist)
         songImage = view.findViewById(R.id.songImage)
 
+        arguments?.getString(ARG_SONG_NAME)?.let {
+            playingSong = it
+        }
+
         playPauseButton.setImageResource(android.R.drawable.ic_media_play)
 
         // Fetch song metadata
-        fetchSongMetadata("Espresso")
+        fetchSongMetadata(playingSong)
 
-        // Initialize MediaPlayer
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(songUrl)
-            prepareAsync()
-            setOnPreparedListener {
-                totalTimeText.text = formatTime(it.duration)
-                songProgress.max = it.duration
-                startUpdatingProgress()
-            }
+        initMediaPlayer()
 
-            setOnErrorListener { mp, what, extra ->
-                // Handle errors here
-                Toast.makeText(activity, "Error playing song", Toast.LENGTH_SHORT).show()
-                false
-            }
-
-            setOnCompletionListener {
-                playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-                this@NowPlayingFragment.isPlaying = false
-            }
-        }
 
         // PLAY PAUSE BUTTON LISTENER
         playPauseButton.setOnClickListener {
@@ -118,6 +120,21 @@ class NowPlayingFragment : Fragment() {
         })
 
         return view
+    }
+
+    private fun initMediaPlayer() {
+        val dynamicSongUrl = "http://10.0.2.2:3000/play/$playingSong"
+
+        // Create a new MediaPlayer instance and set the song
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(dynamicSongUrl)
+            prepareAsync()
+            setOnPreparedListener {
+                totalTimeText.text = formatTime(it.duration)
+                songProgress.max = it.duration
+                startUpdatingProgress()
+            }
+        }
     }
 
     private fun fetchSongMetadata(songName: String) {
@@ -182,6 +199,8 @@ class NowPlayingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
         mediaPlayer.release()
     }
+
 }
