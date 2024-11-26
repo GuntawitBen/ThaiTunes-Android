@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_theme_background_highContrast"
+    android:background="@color/md_theme_background"
+    android:foreground="?android:attr/selectableItemBackground"
     android:outlineAmbientShadowColor="#000000"
     android:outlineSpotShadowColor="#000000"
-    android:foreground="?android:attr/selectableItemBackground"
     android:padding="16dp"
     tools:context=".SearchFragment">
 
