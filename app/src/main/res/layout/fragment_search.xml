@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_onBackground"
     tools:context="SearchFragment">
 
     <!-- RecyclerView for the list of songs -->
@@ -28,7 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="70dp"
+        android:background="?android:attr/windowSplashScreenIconBackgroundColor"
         android:text="Search"
+        android:textColor="@color/md_theme_background"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

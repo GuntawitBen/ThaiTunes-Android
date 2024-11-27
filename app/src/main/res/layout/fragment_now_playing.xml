@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_background_highContrast"
+    android:background="?android:attr/windowSplashScreenIconBackgroundColor"
     android:outlineAmbientShadowColor="#000000"
     android:outlineSpotShadowColor="#000000"
     android:padding="16dp"
@@ -27,6 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="6dp"
         android:text="Song Title"
+        android:textColor="@color/md_theme_background_mediumContrast"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/songImage"
@@ -38,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Song Artist"
+        android:textColor="@color/md_theme_background"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/songTitle"
         app:layout_constraintTop_toBottomOf="@id/songTitle" />
@@ -45,6 +47,7 @@
     <!-- Play/Pause Button -->
     <ImageButton
         android:id="@+id/playPauseButton"
+        style="@android:style/Widget.Material.Light.ImageButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
@@ -68,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:00"
+        android:textColor="@color/gray_400"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/songProgress" />
@@ -78,6 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3:00"
+        android:textColor="@color/gray_400"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/songProgress" />
