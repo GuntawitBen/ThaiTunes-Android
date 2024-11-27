@@ -21,7 +21,7 @@
 
     <!-- Song Title -->
     <TextView
-        android:id="@+id/songTitle"
+        android:id="@+id/songName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -41,8 +41,8 @@
         android:text="Song Artist"
         android:textColor="@color/md_theme_background"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/songTitle"
-        app:layout_constraintTop_toBottomOf="@id/songTitle" />
+        app:layout_constraintStart_toStartOf="@id/songName"
+        app:layout_constraintTop_toBottomOf="@id/songName" />
 
     <!-- Play/Pause Button -->
     <ImageButton
