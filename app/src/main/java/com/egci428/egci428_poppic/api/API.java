@@ -1,6 +1,7 @@
 package com.egci428.egci428_poppic.api;
 
 
+import com.egci428.egci428_poppic.models.Artist;
 import com.egci428.egci428_poppic.models.Song;
 
 import java.util.List;
@@ -46,6 +47,11 @@ public interface API {
     @GET("favorites/{userId}")
     Call<List<Song>> getFavorites(@Path("userId") String user);
 
+    @GET("/random/all")
+    Call<List<Song>> discoverSongs();
+
+    @GET("/random/artists")
+    Call<List<Artist>> randomArtists();
 
 
 }
