@@ -387,4 +387,111 @@ app.delete('/removeFromPlaylist', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+//-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+// Middleware to parse URL-encoded data (from form submissions)
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json());
+// Define the schema for the favorite song
+const FavsongSchema = new mongoose.Schema({
+  user: { type: String, required: true },
+  songName: { type: String, required: true },
+  artistName: { type: String, required: true },
+  artWorkURL: { type: String, required: true, validate: /https?:\/\/.*/ },
+   // Optional field with enum values
+});
+
+// Create the model from the schema
+const FavoriteModel = mongoose.model('FavoriteSong', FavsongSchema);
+
+// Add song to favorites
+app.post('/api/addToFavorites', async (req, res) => {
+  const { user, songName, artistName, artWorkURL, mood } = req.body;
+
+  // Validate the request body to ensure required fields are provided
+  if (!user || !songName || !artistName || !artWorkURL) {
+    return res.status(400).send('User, songName, artistName, and artWorkURL are required');
+  }
+
+  try {
+    // Check if the song is already in the user's favorites
+    const existingFav = await FavoriteModel.findOne({ user, songName, artistName });
+    if (existingFav) {
+      return res.status(400).send('Song is already in your favorites');
+    }
+
+    // Create a new favorite entry
+    const newFavorite = new FavoriteModel({ user, songName, artistName, artWorkURL, mood });
+    await newFavorite.save();
+
+    res.status(201).send('Song added to favorites successfully');
+  } catch (error) {
+    console.error('Error adding song to favorites:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// GET FAVORITE SONGS FOR A USER
+app.get('/favorites/:user', async (req, res) => {
+  const user = req.params.user;
+  if (!user) {
+    return res.status(400).json({ message: 'User parameter is required' });
+  }
+
+  try {
+    const favorites = await FavoriteModel.find({ user });
+    if (!favorites.length) {
+      return res.status(404).json({ message: 'No favorite songs found for this user' });
+    }
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// REMOVE SONG FROM FAVORITES
+app.delete('/removeFromFavorites', async (req, res) => {
+  const { user, songName } = req.body;
+  if (!user || !songName) {
+    return res.status(400).send('User and songName are required');
+  }
+
+  try {
+    const result = await FavoriteModel.findOneAndDelete({ user, songName });
+    if (!result) {
+      return res.status(404).send('Song not found in favorites');
+    }
+    res.status(200).send('Song removed from favorites successfully');
+  } catch (error) {
+    console.error('Error removing song from favorites:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// GET all playlists for a user
+app.get('/api/getfavPlaylists/:user', async (req, res) => {
+  const user = req.params.user;  // Get the user from path parameters
+
+  if (!user) {
+    return res.status(400).json({ message: 'User parameter is required' });
+  }
+
+  try {
+    // Fetch playlists for the user from the database
+    const playlists = await PlaylistsModel.find({ user });
+
+    if (!playlists.length) {
+      return res.status(404).json({ message: 'No playlists found for this user' });
+    }
+
+    res.status(200).json(playlists);  // Return playlists as JSON
+  } catch (error) {
+    console.error('Error fetching playlists:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 

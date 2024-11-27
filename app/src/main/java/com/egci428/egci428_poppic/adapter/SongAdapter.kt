@@ -1,6 +1,5 @@
 package com.egci428.egci428_poppic.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,7 @@ class SongAdapter(private val songList: List<Song>) :
 
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val songImage: ImageView = itemView.findViewById(R.id.songImage)
-        val songTitle: TextView = itemView.findViewById(R.id.songTitle)
+        val songTitle: TextView = itemView.findViewById(R.id.songName)
         val songArtist: TextView = itemView.findViewById(R.id.songArtist)
         val playPauseButton: ImageButton = itemView.findViewById(R.id.playPauseButton)
     }

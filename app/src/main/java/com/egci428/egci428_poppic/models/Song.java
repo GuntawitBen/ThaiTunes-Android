@@ -20,7 +20,7 @@ public class Song {
     }
 
     public void setArtistName(String artist) {
-        this.artistName = artistName;
+        this.artistName = artist;
     }
 
     public String getArtWorkURL() {
@@ -39,5 +39,5 @@ public class Song {
         this.genre = genre;
     }
 
-}
 
+}

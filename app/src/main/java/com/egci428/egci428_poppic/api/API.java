@@ -32,5 +32,20 @@ public interface API {
     @GET("api/all")
     Call<List<Song>> allSongs();
 
+    @FormUrlEncoded
+    @POST("api/addToFavorites")
+    Call<ResponseBody> addToFavorites(
+            @Field("user") String user, // Match the server's field name
+            @Field("songName") String songName,
+            @Field("artistName") String artistName,
+            @Field("artWorkURL") String artWorkURL
+
+    );
+
+
+    @GET("favorites/{userId}")
+    Call<List<Song>> getFavorites(@Path("userId") String user);
+
+
 
 }
