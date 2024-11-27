@@ -7,7 +7,7 @@
     android:background="?android:attr/windowSplashScreenIconBackgroundColor">
 
     <!-- ImageView for Artist's Image -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/artistImage"
         android:layout_width="125dp"
         android:layout_height="125dp"
@@ -17,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
         tools:srcCompat="@tools:sample/avatars" />
 
     <!-- TextView for Artist's Name -->

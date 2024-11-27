@@ -30,6 +30,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="70dp"
         android:background="?android:attr/windowSplashScreenIconBackgroundColor"
+        android:fontFamily="@font/atkinson_hyperlegible_bold"
         android:text="Search"
         android:textColor="@color/md_theme_background"
         android:textSize="24sp"

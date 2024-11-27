@@ -12,4 +12,9 @@
         <item name="android:background">@color/gray_400</item>
         <item name="exampleColor">@color/light_blue_400</item>
     </style>
+
+    <style name="RoundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

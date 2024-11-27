@@ -12,13 +12,14 @@
     tools:context=".SearchFragment">
 
     <!-- Song Image -->
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImage"
         android:layout_width="47dp"
         android:layout_height="46dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_launcher_background" />
+        tools:srcCompat="@drawable/ic_launcher_background"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"/>
 
     <!-- Song Title -->
     <TextView
@@ -39,6 +40,7 @@
         android:id="@+id/songArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/atkinson_hyperlegible"
         android:text="Song Artist"
         android:textColor="@color/gray_400"
         android:textSize="12sp"

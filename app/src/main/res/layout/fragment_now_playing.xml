@@ -38,6 +38,7 @@
         android:id="@+id/songArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/atkinson_hyperlegible"
         android:text="Song Artist"
         android:textColor="@color/md_theme_background"
         android:textSize="12sp"
