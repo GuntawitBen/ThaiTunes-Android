@@ -72,16 +72,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <Button
+        android:id="@+id/logoutButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/circle"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_hint"
+        android:bufferType="normal"
+        android:fontFamily="@font/atkinson_hyperlegible"
+        android:padding="8dp"
+        android:text="Logout"
+        android:textAllCaps="true"
+        android:textColor="@color/md_theme_errorContainer_mediumContrast"
+        app:iconTint="@color/md_theme_error"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/circle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView3"

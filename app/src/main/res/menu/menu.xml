@@ -17,8 +17,7 @@
 
     <item
         android:id="@+id/user"
-        android:icon="@drawable/user"
-        android:title="User"
-        app:showAsAction="ifRoom"
-        />
+        android:icon="@drawable/thumbinactive"
+        android:title="Favorites"
+        app:showAsAction="ifRoom" />
 </menu>
