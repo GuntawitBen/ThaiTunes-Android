@@ -22,4 +22,11 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="CustomSearchViewTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlActivated">#FFFFFF</item> <!-- Cursor color -->
+        <item name="android:textColor">#FFFFFF</item>    <!-- Input text color -->
+        <item name="android:textColorHint">#80FFFFFF</item> <!-- Hint text color -->
+    </style>
+
 </resources>

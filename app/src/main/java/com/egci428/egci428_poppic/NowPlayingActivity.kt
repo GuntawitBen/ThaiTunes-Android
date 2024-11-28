@@ -91,7 +91,7 @@ class NowPlayingFragment : Fragment() {
             initMediaPlayer()
         } else {
             // Update UI to indicate no song is selected
-            songTitle.text = "No song selected"
+            songTitle.text = "No Song Selected"
             songArtist.text = ""
             songImage.setImageResource(R.drawable.ic_launcher_background)
         }
