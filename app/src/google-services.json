@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "374219009585",
+    "project_id": "hello-7f9eb",
+    "storage_bucket": "hello-7f9eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374219009585:android:dc5cff67c7fd2a5aca6f10",
+        "android_client_info": {
+          "package_name": "com.egci428.egci428_poppic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374219009585-igmfemsfe3c2l9ji88vggbcd3b3j8hou.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSLU8ewpz3SjOsfIBDKtT_bEwpJLN_5_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374219009585-igmfemsfe3c2l9ji88vggbcd3b3j8hou.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
