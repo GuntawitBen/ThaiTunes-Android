@@ -1,7 +1,6 @@
 package com.egci428.egci428_poppic
 
 import android.content.Context
-import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -20,6 +19,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.egci428.egci428_poppic.api.API
+import com.egci428.egci428_poppic.models.PlaylistRequest
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,11 +27,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import okhttp3.ResponseBody
 import retrofit2.converter.gson.GsonConverterFactory
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import kotlin.random.Random
 import com.egci428.egci428_poppic.models.Song
 
 
@@ -229,13 +224,12 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         // Log for debugging
         Log.d("API_CALL", "UserId: $userId, SongName: ${currentSong.songName}, ArtistName: ${currentSong.artistName}, ArtworkURL: $artworkUrl")
 
-        val call = apiService.addToFavorites(userId, currentSong.songName, currentSong.artistName, artworkUrl)
+        val playlistRequest = PlaylistRequest( userId, currentSong.songName,   1,  artworkUrl)
+
+        val call = apiService.addToPlaylist(playlistRequest)
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("API_CALL", "Response Code: ${response.code()}")
-                Log.d("API_CALL", "Response Body: ${response.body()?.string()}")
-
                 if (response.isSuccessful) {
                     Toast.makeText(activity, "Song added to favorites!", Toast.LENGTH_SHORT).show()
                 } else {
@@ -245,11 +239,11 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                // Show error message in case of failure
                 Toast.makeText(activity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 Log.e("NowPlayingFragment", "Error adding to favorites: ${t.message}")
             }
         })
+
     }
 
 

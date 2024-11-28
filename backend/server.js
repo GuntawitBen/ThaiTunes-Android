@@ -312,26 +312,41 @@ app.listen(port, () => {
 
 //PLAYLIST API's BELOW
 // SCHEMA
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json());
+// Define the schema for the favorite song
+
 const playlistSchema = new mongoose.Schema({
-  user: String, //Which users playlist this is
-  songName: String, //One of the songs that should be in the playlist         
-  playListNumber: Number, //Which playlist the song should go in           
+  userId: { type: String, required: true },
+  songName: { type: String, required: true },
+  playListNumber: {type: Number,required: true}, //Which playlist the song should go in
+  artWorkURL: { type: String, required: true, validate: /https?:\/\/.*/ },
+
+
 });
 const PlaylistsModel = mongoose.model('Playlists', playlistSchema);
 
 app.post('/addToPlaylist', async (req, res) => {
-  const { user, songName, playListNumber } = req.body;
-  if (!user || !songName || playListNumber === undefined) {
-    return res.status(400).send('User, songName, and playListNumber are required');
+   // Debug log for request body
+    console.log('Request Headers:', req.headers);
+   console.log('Request Body:', req.body);
+  const { userId, songName, playListNumber, artWorkURL } = req.body;
+
+  if (!userId || !songName || !playListNumber || !artWorkURL) {
+      console.log('Missing required fields:', { userId, songName, playListNumber, artWorkURL });
+      return res.status(400).send('userId, songName, playListNumber, and artWorkURL are required');
+
   }
 
-  const newEntry = new PlaylistsModel({
-    user: user,
-    songName: songName,
-    playListNumber: playListNumber,
-  });
-
   try {
+    const newEntry = new PlaylistsModel({
+      userId: userId,
+      songName: songName,
+      playListNumber: playListNumber,
+      artWorkURL: artWorkURL,
+    });
+
     await newEntry.save();
     res.status(201).send('Song added to playlist successfully');
   } catch (error) {
@@ -339,6 +354,11 @@ app.post('/addToPlaylist', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+
+
 
 
 //GET ALL PLAYLISTS FOR A USER
@@ -408,8 +428,8 @@ const FavsongSchema = new mongoose.Schema({
 const FavoriteModel = mongoose.model('FavoriteSong', FavsongSchema);
 
 // Add song to favorites
-app.post('/api/addToFavorites', async (req, res) => {
-  const { user, songName, artistName, artWorkURL, mood } = req.body;
+app.post('api/addToFavorites', async (req, res) => {
+  const { user, songName, artistName, artWorkURL,mood } = req.body;
 
   // Validate the request body to ensure required fields are provided
   if (!user || !songName || !artistName || !artWorkURL) {
