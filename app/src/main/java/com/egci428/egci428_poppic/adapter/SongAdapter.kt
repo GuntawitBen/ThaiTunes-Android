@@ -1,5 +1,9 @@
 package com.egci428.egci428_poppic.adapter
 
+import android.content.Intent
+import android.os.Bundle
+import android.provider.Settings.Global.putString
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +11,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.egci428.egci428_poppic.NowPlayingFragment
 import com.egci428.egci428_poppic.R
 import com.egci428.egci428_poppic.models.Song
 import com.squareup.picasso.Picasso
@@ -27,20 +33,26 @@ class SongAdapter(private val songList: List<Song>) :
         Picasso.get().load(song.artWorkURL).into(holder.songImage)
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(
-                holder.itemView.context,
-                "Play/Pause clicked for ${song.songName}",
-                Toast.LENGTH_SHORT
-            ).show()
+            val songName = song.songName
+
+            val nowPlayingFragment = NowPlayingFragment.newInstance(songName)
+
+            val fragmentTransaction = (holder.itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nowPlayingFragment, nowPlayingFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         // Play/Pause button action (example logic)
         holder.playPauseButton.setOnClickListener {
-            Toast.makeText(
-                holder.itemView.context,
-                "Play/Pause clicked for ${song.songName}",
-                Toast.LENGTH_SHORT
-            ).show()
+            val songName = song.songName
+
+            val nowPlayingFragment = NowPlayingFragment.newInstance(songName)
+
+            val fragmentTransaction = (holder.itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nowPlayingFragment, nowPlayingFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
     }
 

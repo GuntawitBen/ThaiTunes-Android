@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_theme_background_highContrast"
+    android:background="?android:attr/windowSplashScreenIconBackgroundColor"
+    android:foreground="?android:attr/selectableItemBackground"
     android:outlineAmbientShadowColor="#000000"
     android:outlineSpotShadowColor="#000000"
-    android:foreground="?android:attr/selectableItemBackground"
     android:padding="16dp"
     tools:context=".SearchFragment">
 
@@ -26,7 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:fontFamily="@font/atkinson_hyperlegible_bold"
         android:text="Song Title"
+        android:textColor="@color/md_theme_background"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/songImage"
@@ -38,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Song Artist"
+        android:textColor="@color/gray_400"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/songName"
         app:layout_constraintTop_toBottomOf="@id/songName" />
@@ -49,7 +52,7 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/play"
+        android:src="@android:drawable/ic_media_play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

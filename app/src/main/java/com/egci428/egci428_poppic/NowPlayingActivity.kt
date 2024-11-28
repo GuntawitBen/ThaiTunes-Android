@@ -41,9 +41,11 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
     private lateinit var songArtist: TextView
     private lateinit var songImage: ImageView
     private var isPlaying = false
+    private var playingSong: String = "Please Please Please"
+    private lateinit var songName: String
 
     private val handler = Handler()
-    private val songUrl = "http://10.0.2.2:3000/play/Espresso"
+    private val songUrl = "http://10.0.2.2:3000/play/$playingSong"
     private val apiService: API
 
     private var sensorManager: SensorManager? = null
@@ -59,12 +61,27 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         apiService = retrofit.create(API::class.java)
     }
 
+    companion object {
+        private const val ARG_SONG_NAME = "songName"
+
+        fun newInstance(songName: String): NowPlayingFragment {
+            val fragment = NowPlayingFragment()
+            val args = Bundle().apply {
+                putString(ARG_SONG_NAME, songName)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
 
+        // Initialize views
         playPauseButton = view.findViewById(R.id.playPauseButton)
         songProgress = view.findViewById(R.id.songProgress)
         currentTimeText = view.findViewById(R.id.currentTime)
@@ -73,33 +90,18 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         songArtist = view.findViewById(R.id.songArtist)
         songImage = view.findViewById(R.id.songImage)
 
+        arguments?.getString(ARG_SONG_NAME)?.let {
+            playingSong = it
+        }
+
         playPauseButton.setImageResource(android.R.drawable.ic_media_play)
 
-        // Initialize the SensorManager
         sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
         lastUpdate = System.currentTimeMillis()
 
-        fetchSongMetadata("Espresso")
+        fetchSongMetadata(playingSong)
 
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(songUrl)
-            prepareAsync()
-            setOnPreparedListener {
-                totalTimeText.text = formatTime(it.duration)
-                songProgress.max = it.duration
-                startUpdatingProgress()
-            }
-
-            setOnErrorListener { _, _, _ ->
-                Toast.makeText(activity, "Error playing song", Toast.LENGTH_SHORT).show()
-                false
-            }
-
-            setOnCompletionListener {
-                playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-                this@NowPlayingFragment.isPlaying = false
-            }
-        }
+        initMediaPlayer()
 
         playPauseButton.setOnClickListener {
             if (isPlaying) {
@@ -126,6 +128,21 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         })
 
         return view
+    }
+
+    private fun initMediaPlayer() {
+        val dynamicSongUrl = "http://10.0.2.2:3000/play/$playingSong"
+
+        // Create a new MediaPlayer instance and set the song
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(dynamicSongUrl)
+            prepareAsync()
+            setOnPreparedListener {
+                totalTimeText.text = formatTime(it.duration)
+                songProgress.max = it.duration
+                startUpdatingProgress()
+            }
+        }
     }
 
     private fun fetchSongMetadata(songName: String) {
@@ -259,6 +276,8 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
         mediaPlayer.release()
     }
+
 }
