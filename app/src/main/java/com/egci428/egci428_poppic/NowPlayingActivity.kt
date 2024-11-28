@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.media.MediaPlayer
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -34,11 +35,10 @@ class NowPlayingFragment : Fragment() {
     private lateinit var songArtist: TextView
     private lateinit var songImage: ImageView
     private var isPlaying = false
-    private var playingSong: String = "Please Please Please"
+    private var playingSong: String? = null
     private lateinit var songName: String
 
     private val handler = Handler()
-    private val songUrl = "http://10.0.2.2:3000/play/$playingSong"
     private val apiService: API
 
     init {
@@ -53,7 +53,7 @@ class NowPlayingFragment : Fragment() {
     companion object {
         private const val ARG_SONG_NAME = "songName"
 
-        fun newInstance(songName: String): NowPlayingFragment {
+        fun newInstance(songName: String?): NowPlayingFragment {
             val fragment = NowPlayingFragment()
             val args = Bundle().apply {
                 putString(ARG_SONG_NAME, songName)
@@ -63,14 +63,12 @@ class NowPlayingFragment : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
-
 
         // Initialize views
         playPauseButton = view.findViewById(R.id.playPauseButton)
@@ -87,30 +85,39 @@ class NowPlayingFragment : Fragment() {
 
         playPauseButton.setImageResource(android.R.drawable.ic_media_play)
 
-        // Fetch song metadata
-        fetchSongMetadata(playingSong)
-
-        initMediaPlayer()
-
+        if (playingSong != null) {
+            // Fetch song metadata only if a song is selected
+            fetchSongMetadata(playingSong!!)
+            initMediaPlayer()
+        } else {
+            // Update UI to indicate no song is selected
+            songTitle.text = "No song selected"
+            songArtist.text = ""
+            songImage.setImageResource(R.drawable.ic_launcher_background)
+        }
 
         // PLAY PAUSE BUTTON LISTENER
         playPauseButton.setOnClickListener {
-            if (isPlaying) {
-                mediaPlayer.pause()
-                playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-                handler.removeCallbacksAndMessages(null)
+            if (playingSong != null) {
+                if (isPlaying) {
+                    mediaPlayer.pause()
+                    playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+                    handler.removeCallbacksAndMessages(null)
+                } else {
+                    mediaPlayer.start()
+                    playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
+                    startUpdatingProgress()
+                }
+                isPlaying = !isPlaying
             } else {
-                mediaPlayer.start()
-                playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
-                startUpdatingProgress()
+                Toast.makeText(activity, "No song is selected to play", Toast.LENGTH_SHORT).show()
             }
-            isPlaying = !isPlaying
         }
 
         // SEEKBAR CHANGE LISTENER
         songProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
+                if (fromUser && playingSong != null) {
                     mediaPlayer.seekTo(progress)
                 }
             }
@@ -125,14 +132,22 @@ class NowPlayingFragment : Fragment() {
     private fun initMediaPlayer() {
         val dynamicSongUrl = "http://10.0.2.2:3000/play/$playingSong"
 
-        // Create a new MediaPlayer instance and set the song
         mediaPlayer = MediaPlayer().apply {
+            playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
             setDataSource(dynamicSongUrl)
             prepareAsync()
+
+            // Trigger start only when MediaPlayer is ready
             setOnPreparedListener {
+                it.start() // Start playback only when prepared
                 totalTimeText.text = formatTime(it.duration)
                 songProgress.max = it.duration
                 startUpdatingProgress()
+            }
+
+            setOnErrorListener { mp, what, extra ->
+                Log.e("MediaPlayerError", "Error code: $what, Extra code: $extra")
+                true
             }
         }
     }
@@ -159,7 +174,6 @@ class NowPlayingFragment : Fragment() {
                                     Log.e("Picasso", "Error loading image: ${e?.message}")
                                 }
                             })
-
                     }
                 } else {
                     Toast.makeText(activity, "Failed to fetch song metadata", Toast.LENGTH_SHORT).show()
@@ -200,7 +214,8 @@ class NowPlayingFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
-        mediaPlayer.release()
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.release()
+        }
     }
-
 }

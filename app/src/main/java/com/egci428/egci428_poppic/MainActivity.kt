@@ -51,11 +51,13 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.nowPlayingFragment, NowPlayingFragment())
-                .commit()
-        }
+//        if (savedInstanceState == null) {
+//            val nowPlayingFragment = NowPlayingFragment()
+//
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.nowPlayingFragment, nowPlayingFragment)
+//                .commit()
+//        }
     }
 }
 
