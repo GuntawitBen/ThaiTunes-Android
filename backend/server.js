@@ -350,10 +350,11 @@ app.get('/usersPlaylists/:user', async (req, res) => {
   }
 
   try {
-      const playlists = await PlaylistsModel.find({ user });
+      // Modify the query to include playlistNumber: 1
+      const playlists = await PlaylistsModel.find({ user, playlistNumber: 1 });
 
       if (!playlists.length) {
-          return res.status(404).json({ message: 'No playlists found for this user' });
+          return res.status(404).json({ message: 'No playlists found for this user with playlistNumber 1' });
       }
 
       res.status(200).json(playlists);
@@ -362,6 +363,7 @@ app.get('/usersPlaylists/:user', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 // DELETE A SONG FROM A PLAYLIST
 app.delete('/removeFromPlaylist', async (req, res) => {

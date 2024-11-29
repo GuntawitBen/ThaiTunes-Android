@@ -3,22 +3,20 @@ package com.egci428.egci428_poppic.models;
 import java.util.Objects;
 
 public class PlaylistRequest {
-    private String userId;
+    private String user;
     private String songName;
     private int playListNumber;
-    private String artWorkURL;
 
     // Constructor
-    public PlaylistRequest(String userId, String songName, int playListNumber, String artWorkURL) {
-        this.userId = userId;
+    public PlaylistRequest(String user, String songName, int playListNumber) {
+        this.user = user;
         this.songName = songName;
         this.playListNumber = playListNumber;
-        this.artWorkURL = artWorkURL;
     }
 
     // Getters
-    public String getUserId() {
-        return userId;
+    public String getUser() {
+        return user;
     }
 
     public String getSongName() {
@@ -29,13 +27,8 @@ public class PlaylistRequest {
         return playListNumber;
     }
 
-    public String getArtWorkURL() {
-        return artWorkURL;
-    }
-
-    // Setters
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public void setSongName(String songName) {
@@ -46,9 +39,6 @@ public class PlaylistRequest {
         this.playListNumber = playListNumber;
     }
 
-    public void setArtWorkURL(String artWorkURL) {
-        this.artWorkURL = artWorkURL;
-    }
 
     // Override equals() and hashCode() for value comparison
     @Override
@@ -57,24 +47,21 @@ public class PlaylistRequest {
         if (o == null || getClass() != o.getClass()) return false;
         PlaylistRequest that = (PlaylistRequest) o;
         return playListNumber == that.playListNumber &&
-                userId.equals(that.userId) &&
-                songName.equals(that.songName) &&
-                artWorkURL.equals(that.artWorkURL);
+                user.equals(that.user) &&
+                songName.equals(that.songName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, songName, playListNumber, artWorkURL);
+        return Objects.hash(user, songName, playListNumber);
     }
 
-    // Override toString() to provide a string representation of the object
     @Override
     public String toString() {
         return "PlaylistRequest{" +
-                "userId='" + userId + '\'' +
+                "userId='" + user + '\'' +
                 ", songName='" + songName + '\'' +
                 ", playListNumber=" + playListNumber +
-                ", artWorkURL='" + artWorkURL + '\'' +
                 '}';
     }
 }

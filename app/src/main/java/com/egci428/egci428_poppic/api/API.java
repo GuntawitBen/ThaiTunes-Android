@@ -44,9 +44,8 @@ public interface API {
     @POST("/addToPlaylist")
     Call<ResponseBody> addToPlaylist(@Body PlaylistRequest body);
 
-
-    @GET("favorites/{userId}")
-    Call<List<Song>> getPlaylist(@Path("userId") String user);
+    @GET("/userPlaylists/{user}")
+    Call<List<Song>> favoriteSongs(@Path("user") String user);
 
 
 }

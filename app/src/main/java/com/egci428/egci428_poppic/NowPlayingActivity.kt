@@ -80,6 +80,9 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_now_playing, container, false)
 
+        sensorManager = activity?.getSystemService(SensorManager::class.java)
+
+
         // Initialize views
         playPauseButton = view.findViewById(R.id.playPauseButton)
         songProgress = view.findViewById(R.id.songProgress)
@@ -212,7 +215,7 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
                     handler.postDelayed(this, 1000)
                 }
             }
-        }, 1000)  // Initial delay of 1 second
+        }, 5000)  // Initial delay of 1 second
     }
 
     private fun formatTime(timeInMillis: Int): String {
@@ -250,20 +253,18 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         val currentSong = com.egci428.egci428_poppic.models.Song().apply {
             songName = songTitle.text.toString()
             artistName = songArtist.text.toString()
-            artWorkURL = ""
         }
 
-        val artworkUrl = if (currentSong.artWorkURL.isNotBlank()) {
-            currentSong.artWorkURL
-        } else {
-            "https://example.com/default_artwork.jpg"
+        if (currentSong.songName == "No Song Selected"){
+            Toast.makeText(activity, "No Song is Playing", Toast.LENGTH_SHORT).show()
+            return
         }
 
         val userId = "12345"
 
-        Log.d("API_CALL", "UserId: $userId, SongName: ${currentSong.songName}, ArtistName: ${currentSong.artistName}, ArtworkURL: $artworkUrl")
+        Log.d("API_CALL", "UserId: $userId, SongName: ${currentSong.songName}, 1")
 
-        val playlistRequest = PlaylistRequest( userId, currentSong.songName,   1,  artworkUrl)
+        val playlistRequest = PlaylistRequest( userId, currentSong.songName,   1)
 
         val call = apiService.addToPlaylist(playlistRequest)
 
