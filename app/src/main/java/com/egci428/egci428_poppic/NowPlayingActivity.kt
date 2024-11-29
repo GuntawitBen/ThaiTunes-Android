@@ -1,5 +1,9 @@
 package com.egci428.egci428_poppic
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -16,15 +20,17 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.egci428.egci428_poppic.api.API
+import com.egci428.egci428_poppic.models.PlaylistRequest
 import com.egci428.egci428_poppic.models.Song
 import com.squareup.picasso.Picasso
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class NowPlayingFragment : Fragment() {
+class NowPlayingFragment : Fragment(), SensorEventListener {
 
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var playPauseButton: ImageButton
@@ -40,6 +46,10 @@ class NowPlayingFragment : Fragment() {
 
     private val handler = Handler()
     private val apiService: API
+
+    private var sensorManager: SensorManager? = null
+    private var lastUpdate: Long = 0
+    private var favoritesList: MutableList<Song> = mutableListOf()
 
     init {
         val retrofit = Retrofit.Builder()
@@ -211,6 +221,81 @@ class NowPlayingFragment : Fragment() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    // Sensor Event Handling
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            handleShake(event)
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun handleShake(event: SensorEvent) {
+        val x = event.values[0]
+        val y = event.values[1]
+        val z = event.values[2]
+
+        val acceleration = (x * x + y * y + z * z) / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH)
+        val currentTime = System.currentTimeMillis()
+
+        if (acceleration > 2) {
+            if (currentTime - lastUpdate > 200) {
+                lastUpdate = currentTime
+                addToFavorites()
+            }
+        }
+    }
+
+    private fun addToFavorites() {
+        val currentSong = com.egci428.egci428_poppic.models.Song().apply {
+            songName = songTitle.text.toString()
+            artistName = songArtist.text.toString()
+            artWorkURL = ""
+        }
+
+        val artworkUrl = if (currentSong.artWorkURL.isNotBlank()) {
+            currentSong.artWorkURL
+        } else {
+            "https://example.com/default_artwork.jpg"
+        }
+
+        val userId = "12345"
+
+        Log.d("API_CALL", "UserId: $userId, SongName: ${currentSong.songName}, ArtistName: ${currentSong.artistName}, ArtworkURL: $artworkUrl")
+
+        val playlistRequest = PlaylistRequest( userId, currentSong.songName,   1,  artworkUrl)
+
+        val call = apiService.addToPlaylist(playlistRequest)
+
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(activity, "Song added to favorites!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(activity, "Failed to add song to favorites!", Toast.LENGTH_SHORT).show()
+                    Log.d("API_CALL", "Error Response: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(activity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.e("NowPlayingFragment", "Error adding to favorites: ${t.message}")
+            }
+        })
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager?.registerListener(this, sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager?.unregisterListener(this)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
@@ -218,4 +303,6 @@ class NowPlayingFragment : Fragment() {
             mediaPlayer.release()
         }
     }
+
+
 }

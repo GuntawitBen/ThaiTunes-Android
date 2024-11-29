@@ -2,12 +2,14 @@ package com.egci428.egci428_poppic.api;
 
 
 import com.egci428.egci428_poppic.models.Artist;
+import com.egci428.egci428_poppic.models.PlaylistRequest;
 import com.egci428.egci428_poppic.models.Song;
 
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -38,6 +40,13 @@ public interface API {
 
     @GET("/random/artists")
     Call<List<Artist>> randomArtists();
+
+    @POST("/addToPlaylist")
+    Call<ResponseBody> addToPlaylist(@Body PlaylistRequest body);
+
+
+    @GET("favorites/{userId}")
+    Call<List<Song>> getPlaylist(@Path("userId") String user);
 
 
 }
