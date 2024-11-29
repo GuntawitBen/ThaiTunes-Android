@@ -5,40 +5,57 @@ import java.util.Objects;
 public class PlaylistRequest {
     private String user;
     private String songName;
+    private String artistName;
+    private String artWorkURL;
     private int playListNumber;
 
-    // Constructor
-    public PlaylistRequest(String user, String songName, int playListNumber) {
+    public PlaylistRequest(String user, String songName, String artistName, String artWorkURL, int playListNumber) {
         this.user = user;
         this.songName = songName;
+        this.artistName = artistName;
+        this.artWorkURL = artWorkURL;
         this.playListNumber = playListNumber;
     }
 
-    // Getters
     public String getUser() {
         return user;
-    }
-
-    public String getSongName() {
-        return songName;
-    }
-
-    public int getPlayListNumber() {
-        return playListNumber;
     }
 
     public void setUser(String user) {
         this.user = user;
     }
 
+    public String getSongName() {
+        return songName;
+    }
+
     public void setSongName(String songName) {
         this.songName = songName;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public String getArtWorkURL() {
+        return artWorkURL;
+    }
+
+    public void setArtWorkURL(String artWorkURL) {
+        this.artWorkURL = artWorkURL;
+    }
+
+    public int getPlayListNumber() {
+        return playListNumber;
     }
 
     public void setPlayListNumber(int playListNumber) {
         this.playListNumber = playListNumber;
     }
-
 
     // Override equals() and hashCode() for value comparison
     @Override
@@ -59,9 +76,12 @@ public class PlaylistRequest {
     @Override
     public String toString() {
         return "PlaylistRequest{" +
-                "userId='" + user + '\'' +
+                "user='" + user + '\'' +
                 ", songName='" + songName + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", artWorkURL='" + artWorkURL + '\'' +
                 ", playListNumber=" + playListNumber +
                 '}';
     }
+
 }

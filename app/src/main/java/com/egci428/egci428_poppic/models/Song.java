@@ -4,9 +4,7 @@ public class Song {
     private String songName;
     private String artistName;
     private String artWorkURL;
-    private String genre;
 
-    // Getters and Setters
     public String getSongName() {
         return songName;
     }
@@ -19,7 +17,7 @@ public class Song {
         return artistName;
     }
 
-    public void setArtistName(String artist) {
+    public void setArtistName(String artistName) {
         this.artistName = artistName;
     }
 
@@ -29,14 +27,6 @@ public class Song {
 
     public void setArtWorkURL(String artWorkURL) {
         this.artWorkURL = artWorkURL;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
 }

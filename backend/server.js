@@ -313,32 +313,49 @@ app.listen(port, () => {
 //PLAYLIST API's BELOW
 // SCHEMA
 const playlistSchema = new mongoose.Schema({
-  user: String, //Which users playlist this is
-  songName: String, //One of the songs that should be in the playlist         
+  user: String, //Which user's playlist this is
+  songName: String, //One of the songs that should be in the playlist     
+  artistName: String,
+  artWorkURL: String,    
   playListNumber: Number, //Which playlist the song should go in           
 });
 const PlaylistsModel = mongoose.model('Playlists', playlistSchema);
 
 app.post('/addToPlaylist', async (req, res) => {
-  const { user, songName, playListNumber } = req.body;
+  const { user, songName, playListNumber, artistName, artWorkURL } = req.body;
+  
   if (!user || !songName || playListNumber === undefined) {
     return res.status(400).send('User, songName, and playListNumber are required');
   }
 
-  const newEntry = new PlaylistsModel({
-    user: user,
-    songName: songName,
-    playListNumber: playListNumber,
-  });
-
+  // Check if the song already exists in the specified playlist for the user
   try {
-    await newEntry.save();
-    res.status(201).send('Song added to playlist successfully');
+    const existingEntry = await PlaylistsModel.findOne({ user, songName, playListNumber });
+
+    if (existingEntry) {
+      // If the song already exists, return a conflict response
+      return res.status(409).send('Duplicate entry: Song already exists in the playlist');
+    }
+
+    // Create a new playlist entry if no duplicate is found
+    const newEntry = new PlaylistsModel({
+      user,
+      songName,
+      artistName: artistName || '',
+      artWorkURL: artWorkURL || '',
+      playListNumber,
+    });
+
+    // Save the new entry
+    const savedEntry = await newEntry.save();
+    res.status(201).json({ message: 'Song added successfully', playlistItem: savedEntry });
+
   } catch (error) {
     console.error('Error adding song to playlist:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 //GET ALL PLAYLISTS FOR A USER
@@ -351,7 +368,7 @@ app.get('/usersPlaylists/:user', async (req, res) => {
 
   try {
       // Modify the query to include playlistNumber: 1
-      const playlists = await PlaylistsModel.find({ user, playlistNumber: 1 });
+      const playlists = await PlaylistsModel.find({ playlistNumber: 1 });
 
       if (!playlists.length) {
           return res.status(404).json({ message: 'No playlists found for this user with playlistNumber 1' });

@@ -26,7 +26,7 @@ import retrofit2.Response
 class UserFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var songsAdapter: SongAdapter
+    private lateinit var songAdapter: SongAdapter
     private val favoriteSongs = mutableListOf<Song>()
 
     override fun onCreateView(
@@ -37,6 +37,9 @@ class UserFragment : Fragment() {
 
         val logOutButton = view.findViewById<Button>(R.id.logoutButton)
         recyclerView = view.findViewById(R.id.recyclerView)
+
+        songAdapter = SongAdapter(favoriteSongs)
+        recyclerView.adapter = songAdapter
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -50,38 +53,34 @@ class UserFragment : Fragment() {
             requireActivity().finish()
         }
 
-        fetchFavoriteSongs()
+        fetchSongs()
 
         return view
     }
+    
 
-    private fun fetchFavoriteSongs() {
-        val userId = "12345"
+    private fun fetchSongs() {
         val apiService = RetrofitClient.getInstance().getAPI()
-        val call = apiService.favoriteSongs(userId)
-
-        call.enqueue(object : Callback<List<Song>> {
+        apiService.favoriteSongs("12345").enqueue(object : Callback<List<Song>> {
             override fun onResponse(call: Call<List<Song>>, response: Response<List<Song>>) {
-                if (response.isSuccessful) {
-                    val songs = response.body() ?: emptyList()
-                    favoriteSongs.clear()
-                    favoriteSongs.addAll(songs)
+                if (response.isSuccessful && response.body() != null) {
+                    val fetchedSongs = response.body()!!
 
-                    if (!::songsAdapter.isInitialized) {
-                        songsAdapter = SongAdapter(favoriteSongs)
-                        recyclerView.adapter = songsAdapter
-                    } else {
-                        songsAdapter.notifyDataSetChanged()
-                    }
+                    favoriteSongs.clear()
+                    favoriteSongs.addAll(fetchedSongs)
+
+                    songAdapter.notifyDataSetChanged()
                 } else {
-                    Log.e("UserFragment", "Failed to fetch favorite songs: ${response.message()}")
-                    Toast.makeText(requireContext(), "Failed to fetch favorite songs.", Toast.LENGTH_SHORT).show()
+                    Log.e("fetchSongs", "Error: ${response.code()}, Message: ${response.errorBody()?.string()}")
+                    Toast.makeText(requireContext(), "Failed to load songs: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
+
             override fun onFailure(call: Call<List<Song>>, t: Throwable) {
-                Log.e("UserFragment", "Error fetching favorite songs: ${t.message}")
-                Toast.makeText(requireContext(), "Failed to load songs. Please try again.", Toast.LENGTH_SHORT).show()
+                // Handle API failure
+                Toast.makeText(requireContext(), "Error fetching songs: ${t.message}", Toast.LENGTH_LONG).show()
+                t.printStackTrace()
             }
         })
     }

@@ -48,16 +48,27 @@ class SongAdapter(private val songList: MutableList<Song>) :
         fun bind(song: Song) {
             songTitle.text = song.songName
             songArtist.text = song.artistName
-            Picasso.get()
-                .load(song.artWorkURL)
-                .placeholder(R.drawable.ic_launcher_background) // Placeholder during loading
-                .error(R.drawable.ic_launcher_background) // Fallback if loading fails
-                .into(songImage)
+
+            // Check if the image URL is valid before loading it
+            val imageUrl = song.artWorkURL
+            if (!imageUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_launcher_background) // Placeholder during loading
+                    .error(R.drawable.ic_launcher_background) // Fallback if loading fails
+                    .into(songImage)
+            } else {
+                // If the URL is empty, use a default image
+                Picasso.get()
+                    .load(R.drawable.ic_launcher_background) // Fallback image
+                    .into(songImage)
+            }
 
             // Attach listeners
             itemView.setOnClickListener { navigateToNowPlaying(song) }
             playPauseButton.setOnClickListener { navigateToNowPlaying(song) }
         }
+
 
         private fun navigateToNowPlaying(song: Song) {
             val nowPlayingFragment = NowPlayingFragment.newInstance(song.songName)

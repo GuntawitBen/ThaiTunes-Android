@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        Firebase.auth.setLanguageCode("en")
 
         auth = Firebase.auth
 

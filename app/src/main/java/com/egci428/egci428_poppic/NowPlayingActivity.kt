@@ -38,6 +38,7 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
     private lateinit var currentTimeText: TextView
     private lateinit var totalTimeText: TextView
     private lateinit var songTitle: TextView
+
     private lateinit var songArtist: TextView
     private lateinit var songImage: ImageView
     private var isPlaying = false
@@ -49,7 +50,11 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
     private var lastUpdate: Long = 0
+    private var isProcessingShake: Boolean = false
     private var favoritesList: MutableList<Song> = mutableListOf()
+
+    private var imageURL: String = ""
+    private var art: String = ""
 
     init {
         val retrofit = Retrofit.Builder()
@@ -175,6 +180,8 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
                         // Update UI with song metadata
                         songTitle.text = it.songName
                         songArtist.text = it.artistName
+                        art = it.artistName
+                        imageURL = it.artWorkURL
 
                         Picasso.get()
                             .load(it.artWorkURL)
@@ -215,7 +222,7 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
                     handler.postDelayed(this, 1000)
                 }
             }
-        }, 5000)  // Initial delay of 1 second
+        }, 1000)  // Initial delay of 1 second
     }
 
     private fun formatTime(timeInMillis: Int): String {
@@ -244,27 +251,34 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
         if (acceleration > 2) {
             if (currentTime - lastUpdate > 200) {
                 lastUpdate = currentTime
+                isProcessingShake = true
                 addToFavorites()
             }
         }
     }
 
     private fun addToFavorites() {
-        val currentSong = com.egci428.egci428_poppic.models.Song().apply {
-            songName = songTitle.text.toString()
-            artistName = songArtist.text.toString()
-        }
-
-        if (currentSong.songName == "No Song Selected"){
+        // Check if the song is selected
+        if (playingSong == null || songTitle.text == "No Song Selected") {
             Toast.makeText(activity, "No Song is Playing", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val userId = "12345"
+            Log.e("ERROR", art)
 
-        Log.d("API_CALL", "UserId: $userId, SongName: ${currentSong.songName}, 1")
+        val currentSong = Song().apply {
+            songName = songTitle.text.toString()
+            artistName = art
+            artWorkURL = imageURL
+        }
 
-        val playlistRequest = PlaylistRequest( userId, currentSong.songName,   1)
+        val userId = "bob"
+
+        val playlistRequest = PlaylistRequest(
+            userId, currentSong.songName, currentSong.artistName, currentSong.artWorkURL, 1
+        )
+
+        Log.d("CHECK","${currentSong.songName}, ${currentSong.artistName}, ${currentSong.artWorkURL}")
 
         val call = apiService.addToPlaylist(playlistRequest)
 
@@ -273,7 +287,7 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
                 if (response.isSuccessful) {
                     Toast.makeText(activity, "Song added to favorites!", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(activity, "Failed to add song to favorites!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Song already added!", Toast.LENGTH_SHORT).show()
                     Log.d("API_CALL", "Error Response: ${response.message()}")
                 }
             }
@@ -284,7 +298,11 @@ class NowPlayingFragment : Fragment(), SensorEventListener {
             }
         })
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            isProcessingShake = false
+        }, 500) // Wait 500ms before allowing another shake to trigger addToFavorites
     }
+
 
 
     override fun onResume() {

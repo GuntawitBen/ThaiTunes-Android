@@ -64,5 +64,6 @@ dependencies {
     implementation(libs.converter.gson)
 
     implementation(libs.picasso)
+    implementation(kotlin("script-runtime"))
 
 }
