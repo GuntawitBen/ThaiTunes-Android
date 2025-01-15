@@ -13,9 +13,9 @@ To use the ThaiTunes, follow the steps below to run both the backend server and 
 1. Run the Backend Server  
 - Navigate to the folder "backend" containing server.js:
 - Install the required dependencies:
-'npm install'
+`npm install`
 - Start the server:
-'node server.js'
+`node server.js`
 The server should now be running, providing the necessary backend for the mobile app.
 
 2. Run the Mobile App
